@@ -1,0 +1,55 @@
+yotta_unit:
+    items:
+        security: 
+            type: "bundle"      # widget | system
+            name: "Security"
+            description: "Security manager"
+            icon: "security" # optional
+            version: "0.1"    # optional
+            # if bundle | widget
+            entry_point: "/bundles/yottasecurity/build/js/index.js" # path to entry point
+            # developer: 1    # optional
+
+fos_user:
+    db_driver: orm # other valid values are 'mongodb' and 'couchdb'
+    firewall_name: main
+    user_class: YottaCms\Bundle\YottaSecurityBundle\Entity\User
+    service:
+        mailer: fos_user.mailer.twig_swift
+    from_email:
+        address: "%mailer_user%"
+        sender_name: "%mailer_user%"
+
+security:
+    encoders:
+        FOS\UserBundle\Model\UserInterface: bcrypt
+    providers:
+        fos_userbundle:
+            id: fos_user.user_provider.username
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            anonymous: ~
+            logout: ~
+            form_login:
+                provider: fos_userbundle
+    #role_hierarchy: ~
+        #ROLE_ADMIN:      [ROLE_ORGANIZER, ROLE_USER]
+        #ROLE_SUPERADMIN: [ROLE_ADMIN]
+            #    csrf_token_generator: security.csrf.token_manager
+
+            #logout:       true
+
+            #http_basic: ~
+    #access_control:
+    #        - { path: ^/yotta, roles: ROLE_ADMIN }
+
+            # activate different ways to authenticate
+
+            # http_basic: ~
+            # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
+
+            # form_login: ~
+            # https://symfony.com/doc/current/security/form_login_setup.html

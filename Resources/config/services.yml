@@ -1,0 +1,46 @@
+services:
+    
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+    
+    yotta_security.routing_loader:
+        class: Symfony\Component\Routing\Router
+        arguments: ['@routing.loader', '@@YottaSecurityBundle/Resources/config/routing.yml']
+        tags: [router]
+
+    # repository
+    yotta_security.repository.role:
+        class: YottaCms\Bundle\YottaSecurityBundle\Repository\RoleRepository
+    yotta_security.repository.resource:
+        class: YottaCms\Bundle\YottaSecurityBundle\Repository\ResourceRepository
+    yotta_security.repository.resource_attribute:
+        class: YottaCms\Bundle\YottaSecurityBundle\Repository\ResourceAttributeRepository
+    
+    # fixture
+    yotta_security.fixture.role:
+        class: YottaCms\Bundle\YottaSecurityBundle\DataFixtures\RoleFixtures
+        tags: [doctrine.fixture.orm]
+    yotta_security.fixture.resource:
+        class: YottaCms\Bundle\YottaSecurityBundle\DataFixtures\ResourceFixtures
+        tags: [doctrine.fixture.orm]
+    yotta_security.fixture.resource_attribute:
+        class: YottaCms\Bundle\YottaSecurityBundle\DataFixtures\ResourceAttributeFixtures
+        arguments: ['@yotta_security.repository.role', '@yotta_security.repository.resource']
+        tags: [doctrine.fixture.orm]
+        
+    # voter
+    yotta_security.voter.resource:
+        class: YottaCms\Bundle\YottaSecurityBundle\Voter\ResourceVoter
+        arguments: ['@security.access.decision_manager', '@security.role_hierarchy', '@yotta_security.repository.resource_attribute']
+        tags: [security.voter]
+    yotta_security.voter.developer:
+        class: YottaCms\Bundle\YottaSecurityBundle\Voter\DeveloperVoter
+        arguments: ['@security.access.decision_manager']
+        tags: [security.voter]
+
+    # redefine default Symfony services
+    security.role_hierarchy:
+        class: YottaCms\Bundle\YottaSecurityBundle\Core\Role\RoleHierarchy
+        arguments: ['@yotta_security.repository.role', '@security.token_storage']
