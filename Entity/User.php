@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class User extends BaseUser
 {
-    const ROLE_DEFAULT = 'ROLE_DEVELOPER';
+    const ROLE_DEFAULT = 'ROLE_USER';
 
     /**
      * @ORM\Id
