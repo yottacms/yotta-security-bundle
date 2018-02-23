@@ -35,21 +35,13 @@ security:
             logout: ~
             form_login:
                 provider: fos_userbundle
-    #role_hierarchy: ~
-        #ROLE_ADMIN:      [ROLE_ORGANIZER, ROLE_USER]
-        #ROLE_SUPERADMIN: [ROLE_ADMIN]
-            #    csrf_token_generator: security.csrf.token_manager
-
-            #logout:       true
-
-            #http_basic: ~
-    #access_control:
-    #        - { path: ^/yotta, roles: ROLE_ADMIN }
-
-            # activate different ways to authenticate
-
-            # http_basic: ~
-            # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
-
-            # form_login: ~
-            # https://symfony.com/doc/current/security/form_login_setup.html
+    
+doctrine:
+    dbal:
+        driver: 'pdo_mysql'
+        charset: utf8mb4
+        url: '%env(resolve:DATABASE_URL)%'
+    orm:
+        auto_generate_proxy_classes: '%kernel.debug%'
+        naming_strategy: doctrine.orm.naming_strategy.underscore
+        auto_mapping: true
